@@ -98,6 +98,19 @@ select.year {
   margin-bottom: 5px;
 }
 
+.add-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;
+  margin-bottom: 10px; /* Добавляет отступ снизу */
+  margin-right: 10px; /* Добавляет отступ справа */
+}
+
+.add-icon svg {
+  margin-left: 5px;
+}
+
 /* Добавил стили для кнопок "Назад" и "Вперед" */
 .month-navigation button {
   font-size: 16px;
