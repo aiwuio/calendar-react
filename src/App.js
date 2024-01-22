@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-// import HamburgerButton from './humburgerbutton.jsx';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // добавлен импорт иконки
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -26,6 +26,11 @@ const Calendar = () => {
   const handleYearChange = (event) => {
     const newYear = event.target.value;
     setCurrentMonth((prevMonth) => new Date(newYear, prevMonth.getMonth(), 1));
+  };
+
+  const handleAddButtonClick = () => {
+    // Добавьте вашу логику обработки клика здесь
+    console.log('Кнопка "Добавить" была нажата');
   };
 
   const generateCalendar = () => {
@@ -76,9 +81,13 @@ const Calendar = () => {
         
       </div>
       {generateCalendar()}
+      <div className="add-icon" onClick={handleAddButtonClick}>
+        <AddCircleOutlineIcon />
+      </div>
     </div>
   );
 };
+
 
 function App() {
   return (
