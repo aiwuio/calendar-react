@@ -1,21 +1,41 @@
 import React, { useState } from 'react';
 import './App.css';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // добавлен импорт иконки
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import Modal from 'react-modal';
+import { format, addMonths, addDays } from 'date-fns';
+
+Modal.setAppElement('#root');
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskText, setTaskText] = useState('');
+  const [reminderTime, setReminderTime] = useState(new Date());
+  const [tasks, setTasks] = useState({}); // Хранение задач для каждой даты
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
+    setTaskText(tasks[format(currentMonth, 'yyyy-MM') + '-' + date] || ''); // Загрузка текста задачи для выбранной даты
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveTask = () => {
+    const taskKey = format(currentMonth, 'yyyy-MM') + '-' + selectedDate;
+    setTasks({ ...tasks, [taskKey]: taskText }); // Сохранение текста задачи для выбранной даты
+    setIsModalOpen(false);
   };
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prevMonth) => new Date(prevMonth.getFullYear(), prevMonth.getMonth() - 1, 1));
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, -1));
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prevMonth) => new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 1));
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, 1));
   };
 
   const handleMonthChange = (event) => {
@@ -25,12 +45,16 @@ const Calendar = () => {
 
   const handleYearChange = (event) => {
     const newYear = event.target.value;
-    setCurrentMonth((prevMonth) => new Date(newYear, prevMonth.getMonth(), 1));
+    setCurrentMonth((prevMonth) => {
+      const newDate = new Date(prevMonth);
+      newDate.setFullYear(parseInt(newYear, 10));
+      return newDate;
+    });
   };
 
   const handleAddButtonClick = () => {
-    // Добавьте вашу логику обработки клика здесь
-    console.log('Кнопка "Добавить" была нажата');
+    // Your logic for the add button click
+    console.log('Add button clicked');
   };
 
   const generateCalendar = () => {
@@ -62,10 +86,10 @@ const Calendar = () => {
       <h1>Календарь</h1>
       <div className="month-navigation">
         <button onClick={handlePrevMonth}>&lt; </button>
-        <select value={currentMonth.getMonth()} onChange={handleMonthChange}>
+        <select value={format(currentMonth, 'yyyy-MM')} onChange={handleMonthChange}>
           {Array.from({ length: 12 }, (_, index) => (
             <option key={index} value={index}>
-              {new Date(0, index).toLocaleString('default', { month: 'long' })}
+              {format(new Date(currentMonth.getFullYear(), index), 'LLLL yyyy')}
             </option>
           ))}
         </select>
@@ -76,11 +100,23 @@ const Calendar = () => {
             </option>
           ))}
         </select>
-        
         <button onClick={handleNextMonth}> &gt;</button>
-        
       </div>
       {generateCalendar()}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleModalClose}
+        contentLabel="Task Modal"
+        className="modal"
+      >
+        <h2>Добавить задачу</h2>
+        <label>Текст задачи:</label>
+        <input type="text" value={taskText} onChange={(e) => setTaskText(e.target.value)} />
+        <label>Время напоминания:</label>
+        <input type="time" value={format(reminderTime, 'HH:mm')} onChange={(e) => setReminderTime(addDays(new Date(), 1))} />
+        <button onClick={handleSaveTask}>Сохранить</button>
+        <button onClick={handleModalClose}>Закрыть</button>
+      </Modal>
       <div className="add-icon" onClick={handleAddButtonClick}>
         <AddCircleOutlineIcon />
       </div>
@@ -88,11 +124,9 @@ const Calendar = () => {
   );
 };
 
-
 function App() {
   return (
     <div className="App">
-       {/* <HamburgerButton /> */}
       <Calendar />
     </div>
   );
