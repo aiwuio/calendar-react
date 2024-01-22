@@ -1,0 +1,110 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #ecf0f1; /* добавил фоновый цвет */
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  max-width: 400px;
+  background-color: #fff; /* цвет фона контейнера */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* добавил тень */
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  max-width: 300px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.day {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.selected {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.month-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+select {
+  color: #1694aa;
+  padding: 1px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  appearance: none;
+  transition: background-color 0.3s ease;
+}
+
+
+
+select:focus {
+  outline: none;
+}
+
+.select-container {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1;
+}
+
+label:hover .select-container {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+select.month,
+select.year {
+  width: 50%;
+  margin-bottom: 5px;
+}
+
+/* Добавил стили для кнопок "Назад" и "Вперед" */
+.month-navigation button {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Добавил стили для заголовка календаря */
+h1 {
+  color: #3498db;
+}
