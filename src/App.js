@@ -37,9 +37,20 @@ const Calendar = () => {
 
     const daysArray = Array.from({ length: daysInMonth }, (_, index) => index + 1);
 
-    
-
-  }
+    return (
+      <div className="calendar">
+        {daysArray.map((day) => (
+          <div
+            key={day}
+            className={`day ${selectedDate === day ? 'selected' : ''}`}
+            onClick={() => handleDateClick(day)}
+          >
+            {day}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="container">
