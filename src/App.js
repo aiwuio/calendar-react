@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Modal from 'react-modal';
+import ruLocale from 'date-fns/locale/ru';
 import { format, addMonths, addDays } from 'date-fns';
+
 
 Modal.setAppElement('#root');
 
@@ -13,6 +14,20 @@ const Calendar = () => {
   const [taskText, setTaskText] = useState('');
   const [reminderTime, setReminderTime] = useState(new Date());
   const [tasks, setTasks] = useState({}); // Хранение задач для каждой даты
+
+  useEffect(() => {
+    // Меняем цвет квадратиков при изменении задач
+    const squares = document.querySelectorAll('.day');
+    squares.forEach((square) => {
+      const date = parseInt(square.textContent, 10);
+      const taskKey = format(currentMonth, 'yyyy-MM') + '-' + date;
+      if (tasks[taskKey]) {
+        square.classList.add('task-saved');
+      } else {
+        square.classList.remove('task-saved');
+      }
+    });
+  }, [tasks, currentMonth]);
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -40,16 +55,12 @@ const Calendar = () => {
 
   const handleMonthChange = (event) => {
     const newMonth = event.target.value;
-    setCurrentMonth((prevMonth) => new Date(prevMonth.getFullYear(), newMonth, 1));
+    setCurrentMonth((prevMonth) => new Date(prevMonth.getFullYear(), parseInt(newMonth, 10), 1));
   };
 
   const handleYearChange = (event) => {
     const newYear = event.target.value;
-    setCurrentMonth((prevMonth) => {
-      const newDate = new Date(prevMonth);
-      newDate.setFullYear(parseInt(newYear, 10));
-      return newDate;
-    });
+    setCurrentMonth((prevMonth) => new Date(newYear, prevMonth.getMonth(), 1));
   };
 
   const handleAddButtonClick = () => {
@@ -68,17 +79,30 @@ const Calendar = () => {
 
     return (
       <div className="calendar">
-        {daysArray.map((day) => (
-          <div
-            key={day}
-            className={`day ${selectedDate === day ? 'selected' : ''}`}
-            onClick={() => handleDateClick(day)}
-          >
-            {day}
-          </div>
-        ))}
+        {daysArray.map((day) => {
+          const taskKey = format(currentMonth, 'yyyy-MM') + '-' + day;
+          const hasTask = tasks[taskKey];
+
+          return (
+            <div
+              key={day}
+              className={`day ${selectedDate === day ? 'selected' : ''} ${hasTask ? 'task-saved' : ''}`}
+              onClick={() => handleDateClick(day)}
+            >
+              {day}
+            </div>
+          );
+        })}
       </div>
     );
+  };
+ 
+  const generateMonthOptions = () => {
+    return Array.from({ length: 12 }, (_, index) => (
+      <option key={index} value={format(new Date(currentMonth.getFullYear(), index), 'yyyy-MM', { locale: ruLocale })}>
+        {format(new Date(currentMonth.getFullYear(), index), 'LLLL', { locale: ruLocale })}
+      </option>
+    ));
   };
 
   return (
@@ -87,11 +111,7 @@ const Calendar = () => {
       <div className="month-navigation">
         <button onClick={handlePrevMonth}>&lt; </button>
         <select value={format(currentMonth, 'yyyy-MM')} onChange={handleMonthChange}>
-          {Array.from({ length: 12 }, (_, index) => (
-            <option key={index} value={index}>
-              {format(new Date(currentMonth.getFullYear(), index), 'LLLL yyyy')}
-            </option>
-          ))}
+          {generateMonthOptions()}
         </select>
         <select value={currentMonth.getFullYear()} onChange={handleYearChange}>
           {Array.from({ length: 10 }, (_, index) => (
@@ -112,13 +132,10 @@ const Calendar = () => {
         <h2>Добавить задачу</h2>
         <label>Текст задачи:</label>
         <input type="text" value={taskText} onChange={(e) => setTaskText(e.target.value)} />
-        <label>Время напоминания:</label>
-        <input type="time" value={format(reminderTime, 'HH:mm')} onChange={(e) => setReminderTime(addDays(new Date(), 1))} />
         <button onClick={handleSaveTask}>Сохранить</button>
         <button onClick={handleModalClose}>Закрыть</button>
       </Modal>
       <div className="add-icon" onClick={handleAddButtonClick}>
-        <AddCircleOutlineIcon />
       </div>
     </div>
   );
