@@ -229,3 +229,7 @@ select.year {
 h1 {
   color: #3498db;
 }
+.task-saved {
+  background-color: red;
+  color: white;
+}
