@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Modal from 'react-modal';
+import Modal from 'react-modal'; 
 import ruLocale from 'date-fns/locale/ru';
 import { format, addMonths, addDays } from 'date-fns';
 
