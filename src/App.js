@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Modal from 'react-modal'; 
+import Modal from 'react-modal';
 import ruLocale from 'date-fns/locale/ru';
 import { format, addMonths, addDays } from 'date-fns';
 
@@ -54,8 +54,8 @@ const Calendar = () => {
   };
 
   const handleMonthChange = (event) => {
-    const newMonth = event.target.value;
-    setCurrentMonth((prevMonth) => new Date(prevMonth.getFullYear(), parseInt(newMonth, 10), 1));
+    const selectedMonth = new Date(event.target.value + '-01'); // Преобразуем выбранный месяц в объект Date
+    setCurrentMonth(selectedMonth);
   };
 
   const handleYearChange = (event) => {
