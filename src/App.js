@@ -3,6 +3,7 @@ import './App.css';
 import Modal from 'react-modal';
 import ruLocale from 'date-fns/locale/ru';
 import { format, addMonths, addDays } from 'date-fns';
+import SaveIcon from '@mui/icons-material/Save';
 
 
 Modal.setAppElement('#root');
@@ -123,17 +124,27 @@ const Calendar = () => {
         <button onClick={handleNextMonth}> &gt;</button>
       </div>
       {generateCalendar()}
+      {isModalOpen && <div className="overlay" onClick={handleModalClose} />}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={handleModalClose}
         contentLabel="Task Modal"
         className="modal"
       >
-        <h2>Добавить задачу</h2>
-        <label>Текст задачи:</label>
-        <input type="text" value={taskText} onChange={(e) => setTaskText(e.target.value)} />
-        <button onClick={handleSaveTask}>Сохранить</button>
-        <button onClick={handleModalClose}>Закрыть</button>
+        <div className="modal-header">
+          <h2>Добавить задачу</h2>
+          <button className="close-button" onClick={handleModalClose}>&times;</button>
+        </div>
+        <div className="modal-body">
+          <label>Текст задачи: </label>
+          <input type="text" value={taskText} onChange={(e) => setTaskText(e.target.value)} />
+        </div>
+        <div className="modal-footer">
+        <button onClick={handleSaveTask}>
+        Сохранить
+        <SaveIcon sx={{ marginRight: 8 }} /> 
+      </button>
+        </div>
       </Modal>
       <div className="add-icon" onClick={handleAddButtonClick}>
       </div>
